@@ -1,22 +1,29 @@
 import os
 import discord
+from discord.ext import commands
+from keep_alive import keep_alive
 
-client = discord.Client()
+intents = discord.Intents.default()
+intents.members = True
+
+client = commands.Bot(command_prefix='.', intents=intents)
 TOKEN = os.environ['TOKEN']
+
 
 @client.event
 async def on_ready():
-  print('Rymu is ready, what do you need? {0.user}'.format(client))
+    print('I am ready master, what do you need? {0.user}'.format(client))
+
 
 @client.event
-async def on_message(message):
-  if message.author == client.user:
-    return
+async def on_member_join(member):
+    print(f'{member} has joined the server')
 
-  if message.content.startswith('=hello'):
-    await message.channel.send('hello there young traveler')
 
+@client.event
+async def on_member_remove(member):
+    print(f'{member} has left the server')
+
+
+keep_alive()
 client.run(TOKEN)
-
-
-
